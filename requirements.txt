@@ -1,0 +1,3 @@
+############## meraki-automate package requirements #############
+maraki >= 1.0.0
+pandas
