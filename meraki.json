@@ -1,5 +1,0 @@
-{
-  "meraki_api_key" : "apikey",
-  "organization_name" : "some organization",
-  "source_file" : "devicelist.csv"
-}
