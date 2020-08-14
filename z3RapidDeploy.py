@@ -31,24 +31,13 @@ org_name = '' # Set here, or edit the meraki.json file
 src_csv = '' # Set here, or edit the meraki.json file
 js_source = 'meraki.json' # json file contains api key, org name, and source csv
 
-print(api_key)
-
-def get_api_key():
-    try:
-        with open('meraki.json') as f:
-            api_dict = json.load(f)
-            key = api_dict['meraki_api_key']
-            return key
-    except FileNotFoundError:
-        print('Source file not found.  Exiting')
-        quit()
-    except:
-        print('Unknown Error')
-        quit()
-
 
 def get_source_json(js_file):
-    # ALL GLOBALS WILL BE SET VIA JSON FILE
+    """
+    Set global variables from accompanying json file
+    :param js_file:  source json file
+    :return:
+    """
     global api_key
     global org_name
     global src_csv
@@ -65,13 +54,18 @@ def get_source_json(js_file):
 
 
 def get_src_dataframe():
-    global src_csv
-    df = pd.read_csv(src_csv)
-    return df
+    try:
+        global src_csv
+        df = pd.read_csv(src_csv)
+        return df
+    except FileNotFoundError:
+        print(f'Source csv file {src_csv} not found.  Exiting.')
+        quit()
 
 
 def create_net(db, orgid, name):
     """
+    Create the network on the Meraki Controller
     :param db: Meraki Dashboard Object
     :param orgid: organization Id
     :param name: Network Name
@@ -87,6 +81,13 @@ def create_net(db, orgid, name):
 
 
 def claim_dev(db, netid, sn):
+    """
+    Claim a device to a network on the Meraki Controller
+    :param db: Meraki dashboard object
+    :param netid: newtworkId
+    :param sn: Serial Number
+    :return:
+    """
     try:
         db.networks.claimNetworkDevices(netid,sn)
         return
@@ -96,6 +97,13 @@ def claim_dev(db, netid, sn):
 
 
 def name_dev(db, name, sn):
+    """
+    Set Device Hostname
+    :param db: Meraki dashboard object
+    :param name: Hostame str
+    :param sn: Serial Number
+    :return:
+    """
     try:
         db.devices.updateDevice(sn, name=name)
     except meraki.APIError as e:
@@ -104,6 +112,13 @@ def name_dev(db, name, sn):
 
 
 def get_template_id(db, orgid, cfgtemplate):
+    """
+    Gets template id number
+    :param db: Meraki dashboard object
+    :param orgid: orgainziationId
+    :param cfgtemplate: Template string as identified in source csv
+    :return:
+    """
     try:
         template_list = db.organizations.getOrganizationConfigTemplates(orgid)
         for t in template_list:
@@ -120,6 +135,13 @@ def get_template_id(db, orgid, cfgtemplate):
 
 
 def dev_cfg_template(db, cfgtempid, netid):
+    """
+    Apply config template to network
+    :param db: meraki dashboard object
+    :param cfgtempid: config template id
+    :param netid: network id
+    :return:
+    """
     try:
         db.networks.bindNetwork(cfgtempid, netid)
         return
@@ -171,3 +193,5 @@ if __name__ == '__main__':
     main()
     end_time = datetime.now()
     print(f'\nScript complete, total runtime: {end_time - start_time}')
+    print('\n\n')
+    print('*'*50)
