@@ -111,6 +111,18 @@ def name_dev(db, name, sn):
 
 
 
+def get_shard(org):
+    """
+     Gets the org shard to build and return the API URL
+    :param org: organization dictionary
+    :return: base url with correct shard
+    """
+    urlLength = org['url'].find('com') + 3
+    orgShard = org['url'][8:urlLength]
+    base_url = 'https://' + orgShard + '/api/v1'
+    return base_url
+
+
 def get_template_id(db, orgid, cfgtemplate):
     """
     Gets template id number
@@ -162,22 +174,42 @@ def main():
 
     dashboard = meraki.DashboardAPI(
         api_key = api_key,
-        base_url = 'https://n40.meraki.com/api/v1',
-        output_log = False,
+        base_url = 'https://api.meraki.com/api/v1',
+        output_log = False, # set to True to save API logs
         log_file_prefix = '',
         log_path = 'logs',
         print_console = True
     )
 
+    # Get organization data and build base url with correct shard
     organizations = dashboard.organizations.getOrganizations()
     for org in organizations:
         if org["name"] == org_name:
             org_id = org['id']
             print(f'\nOrganization {org_name} id: {org_id}')
+            base_url = get_shard(org)
+            print(base_url)
+
+
+    #destroy initial object
+    del dashboard
+
+    # Create new dashboard object with correct shard id
+    dashboard = meraki.DashboardAPI(
+        api_key=api_key,
+        base_url=base_url,
+        output_log=True,  # set to True to save API logs
+        log_file_prefix='',
+        log_path='logs',
+        print_console=True
+    )
 
     # Source file is pandas dataframe object
     src = get_src_dataframe()
     src.head()
+
+    # The following line is for testing purposes
+    # print(dashboard.organizations.getOrganizations())
 
     for index, row in src.iterrows():
         cfg_template_id = get_template_id(dashboard, org_id, row['config template'])
@@ -186,6 +218,7 @@ def main():
         claim_dev(dashboard, net_id, dev_serial)
         dev_cfg_template(dashboard, net_id, cfg_template_id)
         name_dev(dashboard, row['hostname'], row['sn'])
+
 
 
 if __name__ == '__main__':
