@@ -10,7 +10,6 @@ This script:
 Get a CSV file containing:
 
 *header names in ()
-    Organization Name (org),
     Serial Number(sn),
     Hostname(hostname),
     Network(network),
