@@ -36,9 +36,7 @@
   <h3 align="center">Meraki-Automate</h3>
 
   <p align="center">
-    Meraki tools using Meraki Dashboard API
-    Do you have a large number of Meraki MX or Z3 Teleworkor Gateways to deploy?
-    Use this to rapidly deploy templated Z3 Teleworker Gateways or MX appliances 
+    Do you have a large number of Meraki MX or Z3 Teleworkor Gateways to deploy? Use this to rapidly deploy templated Z3 Teleworker Gateways or MX appliances 
   </p>
   <p align="left">
     <b>This script:</b> <br />
