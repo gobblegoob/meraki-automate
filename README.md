@@ -90,12 +90,7 @@
 To get a local copy up and running follow these simple steps.
 
 ### Prerequisites
-
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
+I sharp mind and a stout heart
 
 ### Installation
 
@@ -103,9 +98,9 @@ This is an example of how to list things you need to use the software and how to
    ```sh
    git clone https://github.com/gobblegoob/meraki-automate.git
    ```
-2. Install NPM packages
+2. Install requirements
    ```sh
-   npm install
+   pip -r requirements.txt
    ```
 
 
